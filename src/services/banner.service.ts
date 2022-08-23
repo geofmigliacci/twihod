@@ -14,7 +14,7 @@ export class BannerService {
   );
 
   async composeProfile(profileImage: Buffer): Promise<Buffer> {
-    return await sharp(profileImage)
+    return sharp(profileImage)
       .resize(100, 100)
       .composite([
         {
@@ -33,7 +33,7 @@ export class BannerService {
     }
 
     const bannerBuffer = Buffer.from(fs.readFileSync(bannerPath));
-    return await sharp(bannerBuffer).resize(1500, 500).toBuffer();
+    return sharp(bannerBuffer).resize(1500, 500).toBuffer();
   }
 
   async generateBanner(
@@ -50,6 +50,6 @@ export class BannerService {
       });
     }
 
-    return await sharp(bannerBuffer).composite(overlayOptions).toBuffer();
+    return sharp(bannerBuffer).composite(overlayOptions).toBuffer();
   }
 }
