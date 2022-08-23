@@ -79,14 +79,14 @@ describe('TwitterService', () => {
     });
 
     it('should return 514 followers', async () => {
-      const usersShowMock = jest.spyOn(twitterClient.accountsAndUsers, 'usersShow').mockImplementation((
-        _parameters?: UsersShowParams
-      ) => {
-        return Promise.resolve({
+      const usersShowMock = jest.spyOn(twitterClient.accountsAndUsers, 'usersShow').mockResolvedValue(
+        {
           followers_count: 514
-        } as UsersShow);
-      });
+        } as UsersShow
+      );
+
       const returnedValue = await twitterService.getFollowerCount();
+
       expect(usersShowMock).toBeCalledWith(
         {
           screen_name: 'SCREEN_NAME_VALUE',
@@ -103,14 +103,14 @@ describe('TwitterService', () => {
     });
 
     it('should call accountUpdateProfile', async () => {
-      const accountUpdateProfileMock = jest.spyOn(twitterClient.accountsAndUsers, 'accountUpdateProfile').mockImplementation((
-        _parameters?: AccountUpdateProfileParams
-      ) => {
-        return Promise.resolve({ } as AccountUpdateProfile);
-      });
+      const accountUpdateProfileMock = jest.spyOn(twitterClient.accountsAndUsers, 'accountUpdateProfile').mockResolvedValue(
+        {} as AccountUpdateProfile
+      );
+
       await twitterService.updateLocation(
         'NEW_LOCATION'
       );
+
       expect(accountUpdateProfileMock).toBeCalledWith(
         { location: 'NEW_LOCATION' }
       );
@@ -123,10 +123,8 @@ describe('TwitterService', () => {
     });
 
     it('should call without errors', async () => {
-      const followersListMock = jest.spyOn(twitterClient.accountsAndUsers, 'followersList').mockImplementation((
-        _parameters?: FollowersListParams
-      ) => {
-        return Promise.resolve({ 
+      const followersListMock = jest.spyOn(twitterClient.accountsAndUsers, 'followersList').mockResolvedValue(
+        {
           users: [
             {
               profile_image_url_https: 'FIRST_URL'
@@ -135,22 +133,20 @@ describe('TwitterService', () => {
               profile_image_url_https: 'SECOND_URL'
             }
           ]
-        } as FollowersList);
-      });
+        } as FollowersList
+      );
 
-      const getMock = jest.spyOn(httpService, 'get').mockImplementation((
-        _url: string,
-        _config?: AxiosRequestConfig
-      ) => {
-        return new Observable((subscriber) => {
+      const getMock = jest.spyOn(httpService, 'get').mockReturnValue(
+        new Observable((subscriber) => {
           subscriber.next(
             {
               data: Buffer.alloc(5)
             } as AxiosResponse
           );
           subscriber.complete();
-        });
-      });
+        }
+        )
+      );
 
       const returnedValue = await twitterService.getFollowersProfileImageBuffers();
 
@@ -184,11 +180,9 @@ describe('TwitterService', () => {
     });
 
     it('should call accountUpdateProfileBanner', async () => {
-      const accountUpdateProfileBannerMock = jest.spyOn(twitterClient.accountsAndUsers, 'accountUpdateProfileBanner').mockImplementation((
-        _parameters?: AccountUpdateProfileBannerParams
-      ) => {
-        return Promise.resolve({ } as unknown);
-      });
+      const accountUpdateProfileBannerMock = jest.spyOn(twitterClient.accountsAndUsers, 'accountUpdateProfileBanner').mockResolvedValue(
+        {} as unknown
+      );
 
       const bannerBufferMock = Buffer.alloc(5);
       await twitterService.updateBanner(

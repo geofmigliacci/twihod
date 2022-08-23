@@ -1,5 +1,8 @@
+import * as sharp from 'sharp';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BannerService } from './banner.service';
+
+jest.mock('sharp');
 
 describe('BannerService', () => {
   let service: BannerService;
@@ -14,5 +17,71 @@ describe('BannerService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('composeProfile', () => {
+    it('should be defined', () => {
+      expect(service.composeProfile).toBeDefined();
+    });
+
+    it('should run correctly', async () => {
+      const toBuffer = jest.fn();
+      const png = jest.fn(() => ({ toBuffer }));
+      const composite = jest.fn(() => ({ png }));
+      const resize = jest.fn(() => ({ composite }));
+      (sharp as any).mockImplementation(() => ({ resize }));
+
+      await service.composeProfile(Buffer.alloc(5));
+
+      expect(resize).toBeCalledWith(100, 100);
+      expect(composite).toBeCalledWith(
+        [
+          {
+            input: expect.any(Buffer),
+            blend: 'dest-in',
+          },
+        ]
+      );
+    });
+  });
+
+  describe('getBannerBufferFromFile', () => {
+    it('should be defined', () => {
+      expect(service.getBannerBufferFromFile).toBeDefined();
+    });
+  });
+
+  describe('generateBanner', () => {
+    it('should be defined', () => {
+      expect(service.generateBanner).toBeDefined();
+    });
+
+    it('should run correctly', async () => {
+      const toBuffer = jest.fn();
+      const composite = jest.fn(() => ({ toBuffer }));
+      (sharp as any).mockImplementation(() => ({ composite }));
+
+      jest.spyOn(service, 'composeProfile').mockResolvedValue(
+        Buffer.alloc(5)
+      );
+      await service.generateBanner(Buffer.alloc(10), [Buffer.alloc(1), Buffer.alloc(2)]);
+
+      expect(service.composeProfile).toHaveBeenNthCalledWith(1, Buffer.alloc(1));
+      expect(service.composeProfile).toHaveBeenNthCalledWith(2, Buffer.alloc(2));
+      expect(composite).toBeCalledWith(
+        [
+          {
+            input: Buffer.alloc(5),
+            top: 50,
+            left: 1350,
+          },
+          {
+            input: Buffer.alloc(5),
+            top: 200,
+            left: 1350,
+          }
+        ]
+      );
+    });
   });
 });

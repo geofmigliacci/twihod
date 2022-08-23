@@ -21,7 +21,7 @@ export class TasksService {
     const followerProgress = this.progressService.getProgress(followersCount);
     await this.twitterService.updateLocation(followerProgress);
     this._logger.log(
-      `Updated profile for the follower count: ${followersCount}`,
+      `Updated profile for the follower count: ${followersCount}.`,
     );
 
     this._logger.log('Running update profile for the banner...');
@@ -33,6 +33,6 @@ export class TasksService {
       profileImageBuffers,
     );
     await this.twitterService.updateBanner(generatedBanner);
-    this._logger.log('Updated profile for the banner');
+    this._logger.log('Updated profile for the banner.');
   }
 }
