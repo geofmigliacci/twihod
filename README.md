@@ -8,13 +8,15 @@
 
 ## Twihod
 
-Twihod is a project made to update your profil location accordingly with the number of your followers making a progress bar with emojis.
+Twihod is a project made to update your profile location accordingly with the number of your followers making a progress bar with emojis.
 
 The idea is a re-write in NestJs from the following [repository](https://github.com/guillaume-rygn/Twitter-header-bot) made by [guillaume-rygn](https://github.com/guillaume-rygn).
 
 ## Description
 
-Twihod is a project made with NestJs to update your profil location accordingly with the number of your followers making a progress bar with emojis.
+Twihod is a project made with NestJs to update your profil location accordingly with the number of your followers making a progress bar with emojis. 
+
+It was made with the power of [NestJs](https://nestjs.com/) which is framework for building efficient, scalable Node.js server-side applications with ease thanks to its testability & dependency injection system.
 
 ## Installation
 
@@ -28,7 +30,7 @@ Then, install dependencies:
 npm ci
 ```
 
-Create a ```.env``` file at the root of the project containing the Twitter's API values. If you're not sure what to put inside your ```.env``` take a look at the ```.env.example``` file.
+Create a ```.env``` file at the root of the project containing the Twitter's API values. If you're not sure what to put in your ```.env``` take a look at the ```.env.example``` file.
 
 ## Gotcha
 
