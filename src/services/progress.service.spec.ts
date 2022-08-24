@@ -77,6 +77,10 @@ describe('ProgressService', () => {
       expect(service.previousCheckpoint(8542)).toBe(8000);
       expect(service.previousCheckpoint(15450)).toBe(15000);
     });
+
+    it('should return the previous check point by slice of 1000', () => {
+      expect(service.previousCheckpoint(100000)).toBe(100000);
+    });
   });
 
   describe('nextCheckpoint', () => {
@@ -103,6 +107,10 @@ describe('ProgressService', () => {
       expect(service.nextCheckpoint(3452)).toBe(4000);
       expect(service.nextCheckpoint(8542)).toBe(9000);
       expect(service.nextCheckpoint(15450)).toBe(16000);
+    });
+
+    it('should return the previous check point by slice of 1000', () => {
+      expect(service.nextCheckpoint(100000)).toBe(101000);
     });
   });
 
