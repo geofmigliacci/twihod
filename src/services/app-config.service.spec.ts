@@ -59,7 +59,7 @@ describe('AppConfigService', () => {
       expect(validated).toEqual(environmentVariablesExpected);
     });
 
-    it('should throw wrong config error', () => {
+    it('should throw WrongConfigError', () => {
       const toValidate = {
         API_KEY: 'TO_VALIDATE',
         API_SECRET: 'TO_VALIDATE',

@@ -1,6 +1,9 @@
-import * as sharp from 'sharp';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BannerService } from './banner.service';
+import { BannerFileNotFoundError } from '../errors';
+import * as sharp from 'sharp';
+import * as fs from 'fs';
+import * as path from 'path';
 
 jest.mock('sharp');
 
@@ -49,6 +52,40 @@ describe('BannerService', () => {
     it('should be defined', () => {
       expect(service.getBannerBufferFromFile).toBeDefined();
     });
+
+    it('should throw BannerFileNotFoundError', async () => {
+      jest.spyOn(fs, 'existsSync').mockReturnValue(
+        false
+      );
+      jest.spyOn(path, 'join').mockReturnValue(
+        'example/banner/twitter-banner.png'
+      );
+      
+      expect(async () => {
+        await service.getBannerBufferFromFile()
+      }).rejects.toThrow(BannerFileNotFoundError);
+    });
+
+    it('should run correctly', async () => {
+      jest.spyOn(fs, 'existsSync').mockReturnValue(
+        true
+      );
+      jest.spyOn(path, 'join').mockReturnValue(
+        'example/banner/twitter-banner.png'
+      );
+      jest.spyOn(fs, 'readFileSync').mockReturnValue(
+        Buffer.alloc(5)
+      );
+
+      const toBuffer = jest.fn(() => Buffer.alloc(5));
+      const resize = jest.fn(() => ({ toBuffer }));
+      (sharp as any).mockImplementation(() => ({ resize }));
+
+      const returnedValue = await service.getBannerBufferFromFile();
+
+      expect(sharp).toBeCalledWith(Buffer.alloc(5));
+      expect(returnedValue).toBeInstanceOf(Buffer);
+    });
   });
 
   describe('generateBanner', () => {
@@ -64,6 +101,7 @@ describe('BannerService', () => {
       jest.spyOn(service, 'composeProfile').mockResolvedValue(
         Buffer.alloc(5)
       );
+
       await service.generateBanner(Buffer.alloc(10), [Buffer.alloc(1), Buffer.alloc(2)]);
 
       expect(service.composeProfile).toHaveBeenNthCalledWith(1, Buffer.alloc(1));

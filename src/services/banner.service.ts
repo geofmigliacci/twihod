@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { BannerFileNotFoundError } from '../errors';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
-import { BannerFileNotFoundError } from '../errors';
 
 @Injectable()
 export class BannerService {
