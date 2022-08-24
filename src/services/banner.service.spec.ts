@@ -37,14 +37,12 @@ describe('BannerService', () => {
       await service.composeProfile(Buffer.alloc(5));
 
       expect(resize).toBeCalledWith(100, 100);
-      expect(composite).toBeCalledWith(
-        [
-          {
-            input: expect.any(Buffer),
-            blend: 'dest-in',
-          },
-        ]
-      );
+      expect(composite).toBeCalledWith([
+        {
+          input: expect.any(Buffer),
+          blend: 'dest-in',
+        },
+      ]);
     });
   });
 
@@ -54,28 +52,22 @@ describe('BannerService', () => {
     });
 
     it('should throw BannerFileNotFoundError', async () => {
-      jest.spyOn(fs, 'existsSync').mockReturnValue(
-        false
-      );
-      jest.spyOn(path, 'join').mockReturnValue(
-        'example/banner/twitter-banner.png'
-      );
-      
+      jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+      jest
+        .spyOn(path, 'join')
+        .mockReturnValue('example/banner/twitter-banner.png');
+
       expect(async () => {
-        await service.getBannerBufferFromFile()
+        await service.getBannerBufferFromFile();
       }).rejects.toThrow(BannerFileNotFoundError);
     });
 
     it('should run correctly', async () => {
-      jest.spyOn(fs, 'existsSync').mockReturnValue(
-        true
-      );
-      jest.spyOn(path, 'join').mockReturnValue(
-        'example/banner/twitter-banner.png'
-      );
-      jest.spyOn(fs, 'readFileSync').mockReturnValue(
-        Buffer.alloc(5)
-      );
+      jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+      jest
+        .spyOn(path, 'join')
+        .mockReturnValue('example/banner/twitter-banner.png');
+      jest.spyOn(fs, 'readFileSync').mockReturnValue(Buffer.alloc(5));
 
       const toBuffer = jest.fn(() => Buffer.alloc(5));
       const resize = jest.fn(() => ({ toBuffer }));
@@ -98,28 +90,33 @@ describe('BannerService', () => {
       const composite = jest.fn(() => ({ toBuffer }));
       (sharp as any).mockImplementation(() => ({ composite }));
 
-      jest.spyOn(service, 'composeProfile').mockResolvedValue(
-        Buffer.alloc(5)
-      );
+      jest.spyOn(service, 'composeProfile').mockResolvedValue(Buffer.alloc(5));
 
-      await service.generateBanner(Buffer.alloc(10), [Buffer.alloc(1), Buffer.alloc(2)]);
+      await service.generateBanner(Buffer.alloc(10), [
+        Buffer.alloc(1),
+        Buffer.alloc(2),
+      ]);
 
-      expect(service.composeProfile).toHaveBeenNthCalledWith(1, Buffer.alloc(1));
-      expect(service.composeProfile).toHaveBeenNthCalledWith(2, Buffer.alloc(2));
-      expect(composite).toBeCalledWith(
-        [
-          {
-            input: Buffer.alloc(5),
-            top: 50,
-            left: 1350,
-          },
-          {
-            input: Buffer.alloc(5),
-            top: 200,
-            left: 1350,
-          }
-        ]
+      expect(service.composeProfile).toHaveBeenNthCalledWith(
+        1,
+        Buffer.alloc(1),
       );
+      expect(service.composeProfile).toHaveBeenNthCalledWith(
+        2,
+        Buffer.alloc(2),
+      );
+      expect(composite).toBeCalledWith([
+        {
+          input: Buffer.alloc(5),
+          top: 50,
+          left: 1350,
+        },
+        {
+          input: Buffer.alloc(5),
+          top: 200,
+          left: 1350,
+        },
+      ]);
     });
   });
 });

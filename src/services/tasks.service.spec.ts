@@ -9,10 +9,12 @@ import {
   TasksService,
 } from './';
 import { HttpModule } from '@nestjs/axios';
-import { TwitterClient } from 'twitter-api-client';
 
 describe('TasksService', () => {
   let service: TasksService;
+  let twitterService: TwitterService;
+  let progressService: ProgressService;
+  let bannerService: BannerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,25 +38,21 @@ describe('TasksService', () => {
       providers: [
         AppConfigService,
         {
-          provide: TwitterClient,
-          useFactory: (appConfigService: AppConfigService) => {
-            return new TwitterClient({
-              apiKey: appConfigService.apiKey,
-              apiSecret: appConfigService.apiSecret,
-              accessToken: appConfigService.accessToken,
-              accessTokenSecret: appConfigService.accessSecret,
-            });
-          },
-          inject: [AppConfigService],
-        },
-        {
           provide: 'SCREEN_NAME',
           useFactory: (appConfigService: AppConfigService) => {
             return appConfigService.screenName;
           },
           inject: [AppConfigService],
         },
-        TwitterService,
+        {
+          provide: TwitterService,
+          useValue: {
+            getFollowerCount: jest.fn(),
+            updateLocation: jest.fn(),
+            getFollowersProfileImageBuffers: jest.fn(),
+            updateBanner: jest.fn(),
+          },
+        },
         ProgressService,
         BannerService,
         TasksService,
@@ -62,9 +60,55 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
+    twitterService = module.get<TwitterService>(TwitterService);
+    progressService = module.get<ProgressService>(ProgressService);
+    bannerService = module.get<BannerService>(BannerService);
+
+    module.useLogger(false);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('updateLocation', () => {
+    it('should be defined', () => {
+      expect(service.updateProfile).toBeDefined();
+    });
+
+    it('should run correctly', async () => {
+      const getFollowerCountMock = jest
+        .spyOn(twitterService, 'getFollowerCount')
+        .mockResolvedValue(1);
+      const getProgressMock = jest
+        .spyOn(progressService, 'getProgress')
+        .mockReturnValue('FAKE_VALUE');
+      const updateLocationMock = jest.spyOn(twitterService, 'updateLocation');
+
+      const getBannerBufferFromFileMock = jest
+        .spyOn(bannerService, 'getBannerBufferFromFile')
+        .mockResolvedValue(Buffer.alloc(5));
+      const getFollowersProfileImageBuffersMock = jest
+        .spyOn(twitterService, 'getFollowersProfileImageBuffers')
+        .mockResolvedValue([Buffer.alloc(5), Buffer.alloc(5)]);
+      const generatedBannerMock = jest
+        .spyOn(bannerService, 'generateBanner')
+        .mockResolvedValue(Buffer.alloc(10));
+      const updateBannerMock = jest.spyOn(twitterService, 'updateBanner');
+
+      await service.updateProfile();
+
+      expect(getFollowerCountMock).toBeCalled();
+      expect(getProgressMock).toBeCalledWith(1);
+      expect(updateLocationMock).toBeCalledWith('FAKE_VALUE');
+
+      expect(getBannerBufferFromFileMock).toBeCalled();
+      expect(getFollowersProfileImageBuffersMock).toBeCalled();
+      expect(generatedBannerMock).toBeCalledWith(Buffer.alloc(5), [
+        Buffer.alloc(5),
+        Buffer.alloc(5),
+      ]);
+      expect(updateBannerMock).toBeCalledWith(Buffer.alloc(10));
+    });
   });
 });

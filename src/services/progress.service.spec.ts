@@ -111,6 +111,10 @@ describe('ProgressService', () => {
       expect(service.getProgress).toBeDefined();
     });
 
+    it('should return 0 ⬜️⬜️⬜️⬜️⬜️ 100 followers', () => {
+      expect(service.getProgress(0)).toBe('0 ⬜️⬜️⬜️⬜️⬜️ 100 followers');
+    });
+
     it('should return 0 🟨⬜️⬜️⬜️⬜️ 100 followers', () => {
       expect(service.getProgress(4)).toBe('0 🟨⬜️⬜️⬜️⬜️ 100 followers');
     });
@@ -129,6 +133,10 @@ describe('ProgressService', () => {
 
     it('should return 0 🟩🟩🟩🟩🟨 100 followers', () => {
       expect(service.getProgress(95)).toBe('0 🟩🟩🟩🟩🟨 100 followers');
+    });
+
+    it('should return 1k ⬜️⬜️⬜️⬜️⬜️ 2k followers', () => {
+      expect(service.getProgress(1000)).toBe('1k ⬜️⬜️⬜️⬜️⬜️ 2k followers');
     });
 
     it('should return 1k 🟨⬜️⬜️⬜️⬜️ 2k followers', () => {
