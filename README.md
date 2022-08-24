@@ -1,53 +1,35 @@
-# 🤖 Twitter Bot Header
+[![License](https://img.shields.io/badge/License-MIT-lightgrey.svg?style=for-the-badge)](LICENSE.md)
 
-![banner](images/banner.png)
+[![Coverage](https://img.shields.io/sonar/coverage/geofmigliacci_twihod?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=geofmigliacci_twihod)
 
+[![Twitter Followers](https://img.shields.io/twitter/follow/geofmigliacci.svg?logo=twitter&style=for-the-badge&label=Follow)](https://twitter.com/geofmigliacci)
+[![Github Followers](https://img.shields.io/github/followers/geofmigliacci?logo=github&style=for-the-badge)](https://github.com/geofmigliacci)
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-ff3f59.svg?style=for-the-badge)](https://www.paypal.com/paypalme/myerffoeg)
 
-## How to setup for your Twitter
+## Twihod
 
-Add a '.env' file and insert these lines:
+Twihod is a project made to update your profil location accordingly with the number of your followers making a progress bar with emojis.
+
+The idea is a re-write in NestJs from the following [repository](https://github.com/guillaume-rygn/Twitter-header-bot) made by [guillaume-rygn](https://github.com/guillaume-rygn).
+
+## Description
+
+Twihod is a project made with NestJs to update your profil location accordingly with the number of your followers making a progress bar with emojis.
+
+## Installation
+
+Replace the banner with your banner inside ```src/assets/twitter-banner.png``` the banner will be converted to a 1500 x 500 png image. 
+
+To make sure your banner doesn't get distorted use this size or a ratio of 3:2.
+
+Then, install dependencies:
 
 ```
-API_KEY='' # API key
-API_SECRET='' # API key secret
-ACCESS_TOKEN='' # Access token
-ACCESS_SECRET='' # Access token secret
-SCREEN_NAME='' # Twitter handle (without the @ character)
+npm ci
 ```
 
-To get the API keys, you need to [apply for a Twitter Developer account](https://developer.twitter.com/en/apply-for-access).  
-It's free and take ~5 minutes.
+Create a ```.env``` file at the root of the project containing the Twitter's API values. If you're not sure what to put inside your ```.env``` take a look at the ```.env.example``` file.
 
-Lastly, add a banner template file with this specific name : twitter-banner.png.
-(make sure your file is a png image and have a size of 1500x500px)
+## Gotcha
 
-## Run the script
-
-Install dependencies:
-```shell
-yarn
-```
-or
-```shell
-npm install
-```
-
-Start the app:
-
-```shell
-node index.js
-```
-
-Keep it running with a process manager like [pm2](https://pm2.io/) and have fun!
-
-## How the script works
-
-[French Tutorial here](https://hot-jujube-90c.notion.site/Twitter-Bot-Header-eef6c49eee4c4762bca9e4a50aefd91e). 
-
-The script fetches new replies every 60 seconds (to avoid [rate limit](https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-show)).
-
-## Most importantly
-
-Follow me on Twitter! [@guillaume_rygn](https://twitter.com/guillaume_rygn)
-
-Thanks!
+Don't forget that your Twitter application should have the right to read & write.
