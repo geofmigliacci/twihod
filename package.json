@@ -1,7 +1,7 @@
 {
   "name": "twihod",
   "version": "1.0.0",
-  "description": "",
+  "description": "A bot that updates your Twitter banner & location every 60 seconds with your number of followers",
   "contributors": [
     {
       "name" : "Geoffrey Migliacci",
