@@ -32,6 +32,12 @@ npm ci
 
 Create a ```.env``` file at the root of the project containing the Twitter's API values. If you're not sure what to put in your ```.env``` take a look at the ```.env.example``` file.
 
+Then you can launch the app with the following command:
+
+```
+npm run start:prod
+```
+
 ## Alternative
 
 You can also launch a docker container with:
@@ -40,7 +46,10 @@ You can also launch a docker container with:
 docker-compose up
 ```
 
+Your ```.env``` must be set.
+
 ## Gotcha
 
 Don't forget that your Twitter application should have the right to read & write.
-Don't forget to 
+
+Don't forget to create your ```.env``` with all the necessary information.
